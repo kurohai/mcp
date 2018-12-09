@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "mcp"
+version = "1.0.0"
+description = ""
+authors = ["Evan Burt <evantburt@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^2.7"
+MarkupSafe = "^1.1"
+enum34 = "^1.1"
+flask-restplus = "^0.12.1"
+six = "^1.11"
+Flask = "^1.0"
+aniso8601 = "^4.0"
+pytz = "^2018.7"
+Jinja2 = "^2.10"
+jsonschema = "^2.6"
+Werkzeug = "^0.14.1"
+functools32 = "^3.2"
+itsdangerous = "^1.1"
+Click = "^7.0"
+Bunch = "^1.0"
