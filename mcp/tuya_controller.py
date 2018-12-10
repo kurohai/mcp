@@ -173,6 +173,22 @@ class OutletEndpoint(Resource):
         group = home_group[args.group]
         add_to_group(device, args.group)
 
+@api.doc(responses={404: 'Outlet not found'}, params={'outlet_name': 'The outlet name', 'action': 'on or off'})
+@ns.route('/device/<string:outlet_name>/control/<string:action>/')
+class OutletControl(Resource):
+
+    @api.doc(description='Control outlets')
+    def get(self, outlet_name, action):
+        global home_group
+        device = home_group.Office.devices[outlet_name]
+        if action == 'on':
+            device.turn_on()
+        elif action == 'off':
+            device.turn_off()
+
+        # device.set_status(action)
+        return device.status()
+
 
 if __name__ == '__main__':
     log.info(api)

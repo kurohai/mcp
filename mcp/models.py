@@ -77,7 +77,7 @@ class OutletDevice(TuyaDevice, Munch):
     """docstring for OutletDevice"""
 
     def __init__(self, dev_id, address, local_key=None, name='', **kwargs):
-        dev_type = 'outlet'
+        dev_type = 'device'
         super(OutletDevice, self).__init__(dev_id, address, local_key, dev_type)
         self.name = name or address
         self.address = address
