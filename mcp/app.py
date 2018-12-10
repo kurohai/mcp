@@ -15,6 +15,8 @@ from models import DeviceList
 from models import Device
 
 
+from tuya_controller import api_outlets
+
 api_v1 = Blueprint('api', __name__, url_prefix='/api/v1')
 
 api = Api(
