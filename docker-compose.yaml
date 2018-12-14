@@ -1,0 +1,27 @@
+version: '3.3'
+services:
+  web:
+    restart: unless-stopped
+    build: .
+    volumes:
+      - ".:/data"
+    environment:
+      VIRTUAL_HOST: "mcp.kurohai.com"
+      VIRTUAL_PORT: "8087"
+      # VIRTUAL_ROOT: "/"
+      HTTPS_METHOD: "redirect"
+      HSTS: "off"
+      LETSENCRYPT_HOST: "mcp.kurohai.com"
+      LETSENCRYPT_EMAIL: "kurohai@gmail.com"
+      FLASK_APP: "mcp/main.py"
+      FLASK_DEBUG: 1
+      FLASK_CMD: "flask run --host=0.0.0.0 --port=8087"
+
+    ports:
+      - published: 8087
+        target: 8087
+
+# networks:
+#   default:
+#     external:
+#       name: webproxy

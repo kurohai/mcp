@@ -83,10 +83,10 @@ class OutletDevice(TuyaDevice, Munch):
         self.address = address
         # self.dev_id = dev_id
         self.local_key = local_key
-        if 'group' in kwargs.keys():
-            self.group = kwargs.pop('group')
-        else:
-            self.group = 'NoGroup'
+        # if 'group' in kwargs.keys():
+        #     self.group = kwargs.pop('group')
+        # else:
+        #     self.group = 'NoGroup'
 
     # def __repr__(self):
         # for k, v in self.
@@ -100,21 +100,35 @@ class OutletGroup(Munch):
         self.devices = Munch()
 
     def add_device(self, device):
-        self.devices[device.name] = device
+        # self.devices[device.name] = device
+        # self.add_group('Home')
+        if isinstance(device, OutletDevice):
+            self.devices[device.name.lower()] = device
+        # else:
+            # self.devices[device.name.lower()] = OutletDevice(device)
+
+
+        # if hasattr(device, 'group'):
+        #     self.add_group(device.group)
 
     def list_devices(self):
-        print self.devices.toDict()
+        # print self.devices.toDict()
         return unmunchify(self.devices)
 
     def get_device(self, name):
-        return self.toDict()
+        return self.devices[name]
 
-    def get_group_by_name(self, name):
-        if self.name == name:
-            return self
+    # def get_group_by_name(self, name):
+    #     if self.name == name:
+    #         return self
+    #     elif name.lower() in self.keys():
 
-    def add_group(self, group):
-        self[group.name] = group
+    #         return self.__getattribute__('name')
+
+    # def add_group(self, group):
+        # if 'home' in group.lower():
+        #     self.devices[]
+        # self.devices = self.get_group_by_name(group)
 
 
 

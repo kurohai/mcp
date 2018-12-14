@@ -1,0 +1,22 @@
+# Nmap 7.01 scan initiated Thu Dec 13 14:47:11 2018 as: nmap -oA data/smart-outlet-scan-2018-12-13-1445 -p 6668 -Pn --open 10.0.0.30-100
+Host: 10.0.0.32 ()	Status: Up
+Host: 10.0.0.32 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.33 ()	Status: Up
+Host: 10.0.0.33 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.41 ()	Status: Up
+Host: 10.0.0.41 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.43 ()	Status: Up
+Host: 10.0.0.43 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.50 ()	Status: Up
+Host: 10.0.0.50 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.52 ()	Status: Up
+Host: 10.0.0.52 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.55 ()	Status: Up
+Host: 10.0.0.55 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.59 ()	Status: Up
+Host: 10.0.0.59 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.62 ()	Status: Up
+Host: 10.0.0.62 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.71 ()	Status: Up
+Host: 10.0.0.71 ()	Ports: 6668/open/tcp//irc///
+# Nmap done at Thu Dec 13 14:47:15 2018 -- 71 IP addresses (30 hosts up) scanned in 4.43 seconds
