@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mcp"
-version = "1.0.0"
+version = "1.1.0"
 description = ""
 authors = ["Evan Burt <evantburt@gmail.com>"]
 
@@ -25,3 +25,13 @@ munch = "^2.3"
 simplejson = "^3.16"
 python-nmap = "^0.6.1"
 supervisor = "^3.3"
+vcrpy = "^2.0"
+cachy = "^0.2.0"
+gunicorn = "^19.9"
+sqlalchemy = "^1.2"
+
+[tool.poetry.scripts]
+netscan = 'mcp.devices:main'
+mcp-api = 'mcp.tuya_controller:app'
+mcp-wsgi = 'mcp.wsgi:app'
+# mcp-gunicorn = 'gunicorn -b :9004 --access-logfile - --error-logfile - mcp.wsgi:app'

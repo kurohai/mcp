@@ -1,0 +1,62 @@
+# Nmap 7.01 scan initiated Thu Dec 13 14:47:11 2018 as: nmap -oA data/smart-outlet-scan-2018-12-13-1445 -p 6668 -Pn --open 10.0.0.30-100
+Nmap scan report for 10.0.0.32
+Host is up (0.058s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 5C:CF:7F:7C:F6:6F (Espressif)
+
+Nmap scan report for 10.0.0.33
+Host is up (0.065s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 60:01:94:7E:60:32 (Unknown)
+
+Nmap scan report for 10.0.0.41
+Host is up (-0.057s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 60:01:94:6D:50:26 (Unknown)
+
+Nmap scan report for 10.0.0.43
+Host is up (-0.056s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: EC:FA:BC:88:0A:12 (Unknown)
+
+Nmap scan report for 10.0.0.50
+Host is up (0.010s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 68:C6:3A:97:C7:C4 (Unknown)
+
+Nmap scan report for 10.0.0.52
+Host is up (-0.053s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 68:C6:3A:97:C7:72 (Unknown)
+
+Nmap scan report for 10.0.0.55
+Host is up (0.097s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: DC:4F:22:0F:3B:EB (Unknown)
+
+Nmap scan report for 10.0.0.59
+Host is up (0.020s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 5C:CF:7F:6B:FC:67 (Espressif)
+
+Nmap scan report for 10.0.0.62
+Host is up (0.095s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 5C:CF:7F:6B:34:5E (Espressif)
+
+Nmap scan report for 10.0.0.71
+Host is up (0.097s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 5C:CF:7F:6B:FB:8A (Espressif)
+
+# Nmap done at Thu Dec 13 14:47:15 2018 -- 71 IP addresses (30 hosts up) scanned in 4.43 seconds

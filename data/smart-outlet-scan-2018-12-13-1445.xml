@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.01 scan initiated Thu Dec 13 14:47:11 2018 as: nmap -oA data/smart-outlet-scan-2018-12-13-1445 -p 6668 -Pn -&#45;open 10.0.0.30-100 -->
+<nmaprun scanner="nmap" args="nmap -oA data/smart-outlet-scan-2018-12-13-1445 -p 6668 -Pn -&#45;open 10.0.0.30-100" start="1544734031" startstr="Thu Dec 13 14:47:11 2018" version="7.01" xmloutputversion="1.04">
+<scaninfo type="syn" protocol="tcp" numservices="1" services="6668"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1544734031" endtime="1544734035"><status state="up" reason="arp-response" reason_ttl="0"/>
+<address addr="10.0.0.32" addrtype="ipv4"/>
+<address addr="5C:CF:7F:7C:F6:6F" addrtype="mac" vendor="Espressif"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="6668"><state state="open" reason="syn-ack" reason_ttl="255"/><service name="irc" method="table" conf="3"/></port>
+</ports>
+<times srtt="57509" rttvar="64378" to="315021"/>
+</host>
+<host starttime="1544734031" endtime="1544734034"><status state="up" reason="arp-response" reason_ttl="0"/>
+<address addr="10.0.0.33" addrtype="ipv4"/>
+<address addr="60:01:94:7E:60:32" addrtype="mac"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="6668"><state state="open" reason="syn-ack" reason_ttl="255"/><service name="irc" method="table" conf="3"/></port>
+</ports>
+<times srtt="65170" rttvar="49137" to="261718"/>
+</host>
+<host starttime="1544734031" endtime="1544734034"><status state="up" reason="arp-response" reason_ttl="0"/>
+<address addr="10.0.0.41" addrtype="ipv4"/>
+<address addr="60:01:94:6D:50:26" addrtype="mac"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="6668"><state state="open" reason="syn-ack" reason_ttl="255"/><service name="irc" method="table" conf="3"/></port>
+</ports>
+<times srtt="-57006" rttvar="37138" to="100000"/>
+</host>
+<host starttime="1544734031" endtime="1544734034"><status state="up" reason="arp-response" reason_ttl="0"/>
+<address addr="10.0.0.43" addrtype="ipv4"/>
+<address addr="EC:FA:BC:88:0A:12" addrtype="mac"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="6668"><state state="open" reason="syn-ack" reason_ttl="255"/><service name="irc" method="table" conf="3"/></port>
+</ports>
+<times srtt="-55903" rttvar="36102" to="100000"/>
+</host>
+<host starttime="1544734031" endtime="1544734034"><status state="up" reason="arp-response" reason_ttl="0"/>
+<address addr="10.0.0.50" addrtype="ipv4"/>
+<address addr="68:C6:3A:97:C7:C4" addrtype="mac"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="6668"><state state="open" reason="syn-ack" reason_ttl="255"/><service name="irc" method="table" conf="3"/></port>
+</ports>
+<times srtt="10085" rttvar="9174" to="100000"/>
+</host>
+<host starttime="1544734031" endtime="1544734035"><status state="up" reason="arp-response" reason_ttl="0"/>
+<address addr="10.0.0.52" addrtype="ipv4"/>
+<address addr="68:C6:3A:97:C7:72" addrtype="mac"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="6668"><state state="open" reason="syn-ack" reason_ttl="255"/><service name="irc" method="table" conf="3"/></port>
+</ports>
+<times srtt="-52581" rttvar="33342" to="100000"/>
+</host>
+<host starttime="1544734031" endtime="1544734035"><status state="up" reason="arp-response" reason_ttl="0"/>
+<address addr="10.0.0.55" addrtype="ipv4"/>
+<address addr="DC:4F:22:0F:3B:EB" addrtype="mac"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="6668"><state state="open" reason="syn-ack" reason_ttl="255"/><service name="irc" method="table" conf="3"/></port>
+</ports>
+<times srtt="96807" rttvar="109204" to="533623"/>
+</host>
+<host starttime="1544734031" endtime="1544734035"><status state="up" reason="arp-response" reason_ttl="0"/>
+<address addr="10.0.0.59" addrtype="ipv4"/>
+<address addr="5C:CF:7F:6B:FC:67" addrtype="mac" vendor="Espressif"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="6668"><state state="open" reason="syn-ack" reason_ttl="255"/><service name="irc" method="table" conf="3"/></port>
+</ports>
+<times srtt="20309" rttvar="20404" to="101925"/>
+</host>
+<host starttime="1544734031" endtime="1544734035"><status state="up" reason="arp-response" reason_ttl="0"/>
+<address addr="10.0.0.62" addrtype="ipv4"/>
+<address addr="5C:CF:7F:6B:34:5E" addrtype="mac" vendor="Espressif"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="6668"><state state="open" reason="syn-ack" reason_ttl="255"/><service name="irc" method="table" conf="3"/></port>
+</ports>
+<times srtt="94612" rttvar="103015" to="506672"/>
+</host>
+<host starttime="1544734031" endtime="1544734035"><status state="up" reason="arp-response" reason_ttl="0"/>
+<address addr="10.0.0.71" addrtype="ipv4"/>
+<address addr="5C:CF:7F:6B:FB:8A" addrtype="mac" vendor="Espressif"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="6668"><state state="open" reason="syn-ack" reason_ttl="255"/><service name="irc" method="table" conf="3"/></port>
+</ports>
+<times srtt="96733" rttvar="108801" to="531937"/>
+</host>
+<runstats><finished time="1544734035" timestr="Thu Dec 13 14:47:15 2018" elapsed="4.43" summary="Nmap done at Thu Dec 13 14:47:15 2018; 71 IP addresses (30 hosts up) scanned in 4.43 seconds" exit="success"/><hosts up="30" down="41" total="71"/>
+</runstats>
+</nmaprun>
