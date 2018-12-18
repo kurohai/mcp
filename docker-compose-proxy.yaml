@@ -1,0 +1,24 @@
+version: '3.3'
+services:
+  nginx:
+    # container_name: kurohai-web
+    restart: unless-stopped
+    image: nginx
+    volumes:
+    - ./nginx-data/html:/usr/share/nginx/html
+    environment:
+      VIRTUAL_HOST: "www.kurohai.com"
+      VIRTUAL_PORT: "8085"
+      # VIRTUAL_ROOT: "/"
+      HTTPS_METHOD: "redirect"
+      HSTS: "off"
+      LETSENCRYPT_HOST: "www.kurohai.com"
+      LETSENCRYPT_EMAIL: "kurohai@gmail.com"
+    ports:
+      - published: 8085
+        target: 80
+
+networks:
+  default:
+    external:
+      name: webproxy

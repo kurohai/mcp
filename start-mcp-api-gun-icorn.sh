@@ -9,4 +9,5 @@
 
 # flask db upgrade
 # flask translate compile
-gunicorn -b :9004 --access-logfile - --error-logfile - mcp.wsgi:app
+# gunicorn -b :9004 --access-logfile - --error-logfile - mcp.wsgi:app
+gunicorn -b ${FLASK_HOST}:${FLASK_PORT} --access-logfile - --error-logfile - mcp.wsgi:app

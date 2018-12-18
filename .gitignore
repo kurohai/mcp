@@ -117,3 +117,6 @@ dmypy.json
 poetry.lock
 #sftp-config.json
 sftp-*.json
+log/
+*.db
+*.py[codr]

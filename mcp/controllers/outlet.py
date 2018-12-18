@@ -15,15 +15,21 @@ from flask_restplus import Resource
 from flask_restplus import fields
 from flask_restplus.reqparse import RequestParser
 from flask_restplus.swagger import Swagger
-from logutil import get_logger
-from models import GroupList
-from models import OutletDevice
-from models import OutletGroup
 from munch import Munch
 from munch import munchify
 from munch import unmunchify
 from pprint import pprint
 import simplejson
+from flask_sqlalchemy import SQLAlchemy
+from mcp import app, db
+# from mcp.parser import outletparser
+from mcp.logutil import get_logger
+
+from mcp.models.outlet import OutletDevice
+from mcp.models.outlet import OutletGroup
+
+from mcp.models.base import Base
+from mcp.models.user import User
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -32,6 +38,14 @@ log.setLevel(logging.DEBUG)
 logging.getLogger('pytuya').setLevel(logging.DEBUG)
 appdir = os.path.dirname(os.path.realpath(__file__))
 pwd = os.path.dirname(appdir)
+
+log.info('appdir: {0}'.format(appdir))
+log.info('pwd: {0}'.format(pwd))
+
+config_path = os.path.join(pwd, 'conf.d')
+data_path = os.path.join(pwd + '/../', 'data')
+scan_results = os.path.join(data_path, 'scan-results.json')
+
 
 cache_dir = os.path.join(pwd, '.cache')
 
@@ -46,9 +60,14 @@ device_conf_file = os.path.join('conf.d', 'devices.json')
 
 cache = CacheManager(cachy_conf)
 
+# SQLALCHEMY_DATABASE_URI = 'sqlite:////{p}/{a}.db'.format(p=pwd, a='mcp')
+# SQLALCHEMY_BINDS = {
+#     'users':        'mysqldb://localhost/users',
+#     'appmeta':      'sqlite:////path/to/appmeta.db'
+# }
 
 def prep_device_list(conf_file_path):
-    global device_list
+    # global device_list
     device_list = munchify(simplejson.load(open(conf_file_path, 'r')))
     # log.debug(muncherator(device_list))
     for k, v in device_list.items():
@@ -96,7 +115,7 @@ def get_device(key):
     # for k, v in device_list.items():
     d = cache.get(key)
     if d is None:
-        cache.forget(key)
+        # cache.forget(key)
         return None
     else:
         print 'key', key
@@ -121,50 +140,6 @@ api = Api(
 )
 ns = api.namespace('outlet', description='Smart Life Outlets')
 
-parser_base = Munch()
-parser_base.name = ''
-parser_base.type = str
-parser_base.required = True
-parser_base.help = 'Data'
-parser_base.location = 'form'
-
-
-parser_name = parser_base.copy()
-parser_name.name = 'name'
-parser_name.help = 'The device name'
-
-parser_dev_id = parser_base.copy()
-parser_dev_id.name = 'dev_id'
-
-parser_address = parser_base.copy()
-parser_address.name = 'address'
-
-parser_local_key = parser_base.copy()
-parser_local_key.name = 'local_key'
-
-parser_group = parser_base.copy()
-parser_group.name = 'group'
-parser_group.required = False
-
-
-# parser = api.parser()
-parser = RequestParser()
-# parser.add_argument(**parser_name.toDict())
-parser.add_argument(**parser_dev_id.toDict())
-parser.add_argument(**parser_address.toDict())
-parser.add_argument(**parser_group.toDict())
-parser.add_argument(**parser_local_key.toDict())
-pprint(parser.args)
-for a in parser.args:
-    print a.name
-    print a.type
-# parser.add_argument(
-#     'name',
-#     type=str,
-#     required=True,
-#     help='The device',
-#     location='form'
-# )
 
 swag = Swagger(api)
 
@@ -175,6 +150,7 @@ home_group = OutletGroup('Home')
 # home_group.Home = OutletGroup('Home')
 # outlet_list = OutletGroup('Office')
 # home_group[outlet_list.name] = outlet_list
+
 
 
 def add_to_group(device, group='Home'):
@@ -206,17 +182,18 @@ def add_to_group(device, group='Home'):
 # outlet_list.add_device(monitor_01)
 
 # add_to_group(monitor_01)
-for k in dnames:
-    device = get_device(k)
-    if device:
-        outlet = OutletDevice(
-            device.dev_id,
-            device.address,
-            device.local_key,
-            name=k,
+# for k in dnames:
+#     device = get_device(k)
+#     if device:
+#         outlet = OutletDevice(
+#             device.dev_id,
+#             device.address,
+#             device.local_key,
+#             name=k,
 
-        )
-        add_to_group(outlet)
+#         )
+
+#         add_to_group(outlet)
 
 # @api.doc(
 #     responses={404: 'Group not found'},
@@ -241,60 +218,146 @@ for k in dnames:
 class ListAllDevices(Resource):
     @api.doc(description='List of all outlets')
     def get(self):
-        global home_group
 
         # return outlet_list.list_devices()
-        return home_group.toDict()
+        # o = [Munch(d) for d in db.session.query(OutletDevice).all()]
+        # o = db.session.query(OutletDevice).all()
+        o = OutletDevice.query.all()
+        # print(o.serialize().toDict())
+        for d in o:
+            log.info(d.serialize().toDict())
+        # data =
+        # log.info(o)
+        return [d.serialize().toDict()for d in o]
 
 
 @api.doc(responses={404: 'Outlet not found'}, params={'outlet_name': 'The outlet name'})
-@ns.route('/device/<string:outlet_name>/')
+@ns.route('/<string:outlet_name>/')
 class OutletEndpoint(Resource):
 
     @api.doc(description='List of all outlets')
     def get(self, outlet_name):
-        global home_group
-        return home_group.get_device(outlet_name)
+        # global home_group
+        # return home_group.get_device(outlet_name)
+        o = db.session.query(OutletDevice).filter(OutletDevice.name == outlet_name.lower()).first()
 
-    @api.doc(parser=parser, description='Add new outlet')
-    def put(self, outlet_name):
-        global home_group
+        log.info(o.to_json())
+        if o:
+            return o.serialize().toDict()
+        else:
+            return 404
+    # @api.doc(parser=outletparser, description='Add new outlet')
+    # @api.doc(description='Add new outlet')
+    # def put(self, outlet_name):
+    #     global home_group
 
-        args = parser.parse_args()
-        d = Munch(args).toDict()
-        pprint(d)
-        device = OutletDevice(name=outlet_name, dev_id=args.dev_id,
-                              address=args.address, local_key=args.local_key)
-        # group = home_group[args.group]
-        home_group.add_device(device)
-        return unmunchify(device)
+    #     args = parser.parse_args()
+    #     d = Munch(args).toDict()
+    #     pprint(d)
+    #     device = OutletDevice(name=outlet_name, dev_id=args.dev_id,
+    #                           address=args.address, local_key=args.local_key)
+    #     # group = home_group[args.group]
+    #     home_group.add_device(device)
+    #     return unmunchify(device)
 
 
 @api.doc(responses={404: 'Outlet not found'}, params={'outlet_name': 'The outlet name', 'action': 'on or off'})
-@ns.route('/device/<string:outlet_name>/control/<string:action>/')
-@ns.route('/device/<string:outlet_name>/control/<string:action>/<int:switch>/')
+@ns.route('/<string:outlet_name>/control/<string:action>/')
+@ns.route('/<string:outlet_name>/control/<string:action>/<int:switch>/')
 class OutletControl(Resource):
 
     @api.doc(description='Control outlets')
     def get(self, outlet_name, action, switch=1):
-        global home_group
-        device = home_group.get_device(outlet_name)
+        from pytuya import Device as TuyaDevice
+
+        o = db.session.query(OutletDevice).filter(OutletDevice.name == outlet_name.lower()).first()
+        log.info(o.to_dict())
+        # device = o.connect_device()
+        device = TuyaDevice(dev_id=o.dev_id, address=o.address, local_key=o.local_key, dev_type=o.dev_type)
         if action == 'on':
             device.turn_on(switch=switch)
+            # device.set_status('on', switch=switch)
         elif action == 'off':
+            # device.set_status('off', switch=switch)
             device.turn_off(switch=switch)
 
         # device.set_status(action)
         return device.status()
 
 
-app = Flask(__name__)
+
+db.init_app(app)
+# db.drop_all()
+# db.create_all(bind='auth')
+# db.create_all(bind='appdata')
+db.create_all()
+
+
+# user = User(username='Kuro', email='kurohat@gmail.com')
+
+euser = db.session.query(User).get(1)
+if euser:
+    db.session.delete(euser)
+    db.session.commit()
+user = User()
+# user.id = 1
+user.username = 'kurohai'
+user.email = 'kurohai@gmail.com'
+
+db.session.add(user)
+db.session.commit()
+pprint([u.username for u in db.session.query(User).all()])
+
+pprint(db.session.query(User).get(1))
+# pprint(User.query({'id': 1}))
+
+hg = db.session.query(OutletGroup).filter(OutletGroup.name == 'Home').first()
+if not hg:
+
+    db.session.add(home_group)
+    db.session.commit()
+scan_results = os.path.join(data_path, 'scan-results.json')
+
+with open(scan_results, 'r') as f:
+    devices = munchify(simplejson.load(f))
+
+for d in devices:
+    log.info('adding device: {0}'.format(d))
+    hg = db.session.query(OutletGroup).filter(OutletGroup.name == 'Home').first()
+    if d:
+
+        log.info('device matched: {0}'.format(d))
+        outlet = OutletDevice(
+            d.dev_id,
+            d.address,
+            d.local_key,
+            name=d.name,
+
+        )
+        # add_to_group(outlet)
+
+        if not db.session.query(OutletDevice).filter(OutletDevice.address == d.address).first():
+            hg.add_device(outlet)
+            # db.session.update(hg)
+            db.session.add(outlet)
+            db.session.commit()
+
 app.register_blueprint(api_blueprint)
 
 if __name__ == '__main__':
     log.info(api)
+
     pprint(api.__dict__)
     # app = Flask(__name__)
+    db.init_app(app)
+
+    db.create_all()
+
+    user = User()
+    user.username = 'Kuro'
+    user.email = 'kurohai@gmail.com'
+    user.add(user)
+
     app.run(
         debug=True,
         port=8080,

@@ -85,7 +85,7 @@ def muncherator(obj):
     )
 
 
-@cache
+# @cache
 def check_mac(macaddr, address):
     global device_list
     log.debug('testing mac: {0}'.format(macaddr))
@@ -93,20 +93,34 @@ def check_mac(macaddr, address):
     for k, v in device_list.items():
         if v.mac.lower() == macaddr.lower():
             v.address = address
-            return k, v
-            # cache.forever(k, v)
+            cache.forever(k, v)
+            # return k, v
             log.debug('found address for ' + muncherator(k) + ' as ' + address)
             log.debug(muncherator(v))
+            # device_list[k] = v
+            write_data(device_list[k])
+            # return True
         device_list[k] = v
 
 
 def write_data(data):
-    with open(scan_results, 'ab') as f:
-        f.write(simplejson.dumps(data, indent=4))
+    if os.path.isfile(scan_results):
+        with open(scan_results, 'r') as f:
+            d = simplejson.load(f)
+        if d:
+            d.append(data)
+    else:
+        d = [data]
+    a = list()
+    for i, device in enumerate(d):
+        if device not in a:
+            a.append(device)
+    with open(scan_results, 'wb') as f:
+        f.write(simplejson.dumps(a, indent=4))
 
 
 def scan_callback(host, data):
-    global device_list
+    # global device_list
     log.info('found: {0}'.format(host))
     data = munchify(data)
 
@@ -119,8 +133,9 @@ def scan_callback(host, data):
             else:
                 if 'mac' in data.scan[str(host)].addresses:
                     macaddr = data.scan[host].addresses.mac
-                    write_data(data)
+                    # write_data(data)
                     check_mac(macaddr, host)
+
                 else:
                     macaddr = 'nomac'
                 print 'Results:', host, macaddr
@@ -146,8 +161,8 @@ def main():
     device_conf_file = os.path.join('conf.d', 'devices.json')
     device_list = prep_device_list(device_conf_file)
     log.debug(muncherator(device_list))
-    if os.path.isfile(scan_results):
-        os.remove(scan_results)
+    # if os.path.isfile(scan_results):
+    #     os.remove(scan_results)
 
     scanner = PortScannerAsync()
     for i in xrange(30, 100, 10):
@@ -190,6 +205,7 @@ def main():
     for key, value in device_list.items():
         device = cache.get(key)
         print muncherator(device)
+        # value.address =
 
     # for name, device in device_list.items():
 
@@ -197,7 +213,7 @@ def main():
 if __name__ == '__main__':
     cmd = sys.argv[1]
     if cmd == 'scan':
-        for i in xrange(5):
+        for i in xrange(1):
             main()
             sleep(3)
     elif cmd == 'rpt':
