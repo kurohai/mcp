@@ -120,3 +120,5 @@ sftp-*.json
 log/
 *.db
 *.py[codr]
+*.nmap
+*.grep
