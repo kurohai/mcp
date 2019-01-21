@@ -17,6 +17,11 @@ from pprint import pprint
 from time import sleep
 from cachy import CacheManager
 
+# from mcp.models.outlet import OutletDevice
+# from mcp.models.outlet import OutletGroup
+from mcp import app, db, OutletDevice
+
+
 logging.basicConfig(level=logging.DEBUG)
 log = get_logger(__name__, 'netscan')
 # log = logging.getLogger(__name__)
@@ -34,9 +39,11 @@ data_path = os.path.join(pwd, 'data')
 scan_results = os.path.join(data_path, 'scan-results.json')
 cache_dir = os.path.join(pwd, '.cache')
 
+
 def mkdir_if_nodir(dirpath):
     if not os.path.isdir(dirpath):
         os.mkdir(dirpath)
+
 
 mkdir_if_nodir(cache_dir)
 mkdir_if_nodir(config_path)
@@ -57,7 +64,6 @@ global netdevices
 netdevices = Munch()
 
 
-
 def prep_device_list(conf_file_path):
     global device_list
     device_list = munchify(simplejson.load(open(conf_file_path, 'r')))
@@ -68,14 +74,12 @@ def prep_device_list(conf_file_path):
     return device_list
 
 
-
 def parse_mac_from_id(device_id):
     s = device_id[-12:]
     mac = str()
     for i in xrange(0, 12, 2):
         mac += ':' + s[i:i + 2]
     return mac[1:]
-
 
 
 def muncherator(obj):
@@ -87,20 +91,23 @@ def muncherator(obj):
 
 # @cache
 def check_mac(macaddr, address):
-    global device_list
+    # global device_list
     log.debug('testing mac: {0}'.format(macaddr))
     log.debug('address ip: {0}'.format(address))
-    for k, v in device_list.items():
+    device_list = OutletDevice.query.all()
+    for v in device_list:
         if v.mac.lower() == macaddr.lower():
             v.address = address
-            cache.forever(k, v)
+            # cache.forever(k, v)
+            db.session.add(v)
+            db.session.commit()
             # return k, v
             log.debug('found address for ' + muncherator(k) + ' as ' + address)
             log.debug(muncherator(v))
             # device_list[k] = v
-            write_data(device_list[k])
+            write_data(v)
             # return True
-        device_list[k] = v
+        # device_list[k] = v
 
 
 def write_data(data):
@@ -157,18 +164,21 @@ def scan_callback(host, data):
 
 
 def main():
-    global device_list
+    # global device_list
     device_conf_file = os.path.join('conf.d', 'devices.json')
-    device_list = prep_device_list(device_conf_file)
+    # device_list = prep_device_list(device_conf_file)
+    device_list = munchify(OutletDevice.query.all())
+    # device_list = OutletDevice.query.all()
+
     log.debug(muncherator(device_list))
     # if os.path.isfile(scan_results):
     #     os.remove(scan_results)
 
     scanner = PortScannerAsync()
     for i in xrange(30, 100, 10):
-        log.debug('scanning: 10.0.0.{0}-{1}'.format(i, i+10))
+        log.debug('scanning: 10.0.0.{0}-{1}'.format(i, i + 10))
         scanner.scan(
-            hosts='10.0.0.{0}-{1}'.format(i, i+10),
+            hosts='10.0.0.{0}-{1}'.format(i, i + 10),
             # hosts='10.0.0.0/25',
             ports='6668',
             arguments='-Pn -n',
@@ -200,10 +210,13 @@ def main():
     #     i += 1
     #     sleep(1)
     scanner.wait(timeout=300)
-    print(muncherator(device_list))
+    print(device_list)
     sleep(2)
-    for key, value in device_list.items():
-        device = cache.get(key)
+    # for key, value in device_list.items():
+    for key, value in enumerate(device_list):
+        # device = cache.get(key)
+        device = OutletDevice.query.filter(
+            OutletDevice.address == value.address)
         print muncherator(device)
         # value.address =
 
@@ -211,15 +224,55 @@ def main():
 
 
 if __name__ == '__main__':
+    db.init_app(app)
+    db.create_all()
+    device_conf_file = os.path.join('conf.d', 'devices.json')
+    device_list_setup = prep_device_list(device_conf_file)
+    pprint(unmunchify(device_list_setup))
+    for k, v in unmunchify(device_list_setup).items():
+        v = Munch(v)
+        device = None
+        devices = OutletDevice.query.all()
+        for device in devices:
+        # device = OutletDevice.query.filter(
+        #     OutletDevice.name == v.name,
+            # OutletDevice.address != v.address,
+            # OutletDevice.local_key != v.local_key,
+            # OutletDevice.dev_id != v.dev_id.lower(),
+        # ).first()
+            if device is None or str(v.dev_id).lower() != str(device.dev_id).lower():
+                # if str(v.dev_id).lower() != str(device.dev_id):
+                device = OutletDevice(
+                    dev_id=v.dev_id,
+                    address=v.address or str(),
+                    local_key=v.local_key,
+                    name=v.name,
+                )
+                device.outletgroup_id = 1
+                # device.name = v.name
+                # device.address = v.address or str()
+                # device.dev_id = v.dev_id
+                # device.local_key = v.local_key
+                db.session.add(device)
+                db.session.commit()
+            pprint(device)
+    # pprint(db.app.__dict__)
+    # pprint(dir(db.app))
     cmd = sys.argv[1]
     if cmd == 'scan':
         for i in xrange(1):
             main()
             sleep(3)
     elif cmd == 'rpt':
-        device_conf_file = os.path.join('conf.d', 'devices.json')
-        device_list = prep_device_list(device_conf_file)
+        device_list = Munch()
+        # pprint(dir(OutletDevice))
+        # pprint(OutletDevice.__dict__)
+        # log.info(OutletDevice.count)
+        for d in OutletDevice.query.all():
+            device_list[d.name] = d
+            log.info(d)
         count = int()
+        log.info('dev count: '.format(device_list))
         for key, value in device_list.items():
             device = munchify(cache.get(key))
             if device:

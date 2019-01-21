@@ -1,115 +1,186 @@
 #!/usr/bin/env python
 
 
-from munch import Munch
-from munch import unmunchify
-from munch import munchify
 # from flask_restplus import Model
 # from flask_restplus import OrderedModel
 # from flask_restplus import Resource
-from pytuya import Device as TuyaDevice
+# from sqlalchemy.ext.declarative import declared_attr
 import simplejson
 
+from flask_restplus.model import Model
+from munch import Munch
+from munch import munchify
+from munch import unmunchify
+from pytuya import AESCipher
+from pytuya import Device
+from pytuya import PROTOCOL_VERSION_BYTES
+from six import with_metaclass
+from sqlalchemy import Boolean
+from sqlalchemy import Column
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy.orm import relationship
 
-from mcp import Base, db
+from mcp.models import Base
+from mcp.logutil import get_logger
 
+
+log = get_logger(__name__)
 
 
 class OutletDevice(Base):
     """docstring for OutletDevice"""
-    __bind_key__ = 'auth'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=True, nullable=False)
-    address = db.Column(db.String(80), unique=True, nullable=True)
-    dev_id = db.Column(db.String(80), unique=True, nullable=True)
-    local_key = db.Column(db.String(80), unique=True, nullable=True)
-    dev_type = db.Column(db.String(80), unique=False, nullable=True)
-    outletgroup_id = db.Column(db.Integer, db.ForeignKey('outletgroup.id'),
-        nullable=False)
+    # __bind_key__ = 'appdata'
 
+    name = Column(String(80), unique=True, nullable=False)
+    address = Column(String(80), unique=False, nullable=True)
+    mac_address = Column(String(80), unique=True, nullable=True)
+
+    dev_id = Column(String(80), unique=True, nullable=True)
+    local_key = Column(String(80), unique=False, nullable=True)
+    dev_type = Column(String(80), unique=False,
+                      nullable=False, default='device')
+    dev_type_id = Column(Integer, unique=False, nullable=True)
+
+    status = Column(Boolean, unique=False, nullable=False, default=False)
+
+    timer = Column(Integer, unique=False, nullable=True, default=0)
+    current = Column(Integer, unique=False, nullable=True, default=0)
+    power = Column(Integer, unique=False, nullable=True, default=0)
+    voltage = Column(Integer, unique=False, nullable=True, default=0)
+
+    outletgroup_id = Column(
+        Integer,
+        ForeignKey('outletgroup.id'),
+        nullable=False,
+        default=1
+    )
 
     def __init__(self, dev_id, address, local_key=None, name='', **kwargs):
         self.dev_type = 'device'
-        # super(OutletDevice, self).__init__(dev_id, address, local_key)
-        self.name = name or address
-        self.address = address
-        self.dev_id = dev_id
-        self.local_key = local_key
-        # if 'group' in kwargs.keys():
-        #     self.group = kwargs.pop('group')
-        # else:
-        #     self.group = 'NoGroup'
+        self.name = name.lower() or address.lower()
+        self.address = address.lower()
+        self.dev_id = dev_id.lower()
+        self.local_key = local_key.lower()
+        self.get_dev_type()
 
+    def get_dev_type(self):
+        self.mac_address = self._mac_addr()
+        self.dev_type_id = self._dev_type_id()
+
+    def _dev_type_id(self):
+        return self.dev_id[:8].lower()
+
+    def _mac_addr(self):
+        return self.dev_id[8:].lower()
 
     def serialize(self):
         d = Munch()
         d.name = self.name
         d.id = self.id
         d.address = self.address
+        d.mac_address = self.mac_address
+
         d.dev_id = self.dev_id
         d.local_key = self.local_key
         d.dev_type = self.dev_type
+        d.dev_type_id = self.dev_type_id
+
+        d.timer = self.timer
+        d.current = self.current
+        d.power = self.power
+        d.voltage = self.voltage
+
+        d.status = self.status
+
         d.outletgroup_id = self.outletgroup_id
         return d
 
-    def to_json(self):
-        return self.serialize().toJSON()
-
-    def to_dict(self):
-        return self.serialize().toDict()
-
     def connect_device(self):
-        return TuyaDevice(self.dev_id, self.address, local_key=self.local_key)
+        return TuyaDevice(self.dev_id, self.address, local_key=self.local_key, dev_type=self.dev_type)
 
-
-
-    # def __repr__(self):
-        # for k, v in self.
-        # return str(Munch(self).toDict())
 
 class OutletGroup(Base):
     """docstring for OutletGroup"""
-    __bind_key__ = 'auth'
-    # __tablename__ = 'outlet_group'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=True, nullable=False)
-    devices = db.relationship('OutletDevice', backref='outletgroup', lazy=True)
 
+    # __bind_key__ = 'appdata'
+
+    name = Column(String(80), unique=True, nullable=False)
+    devices = relationship('OutletDevice', backref='outletgroup', lazy=True)
 
     def __init__(self, name):
         super(OutletGroup, self).__init__()
         self.name = name
-    #     self.devices = Munch()
 
     def add_device(self, device):
-        # self.devices[device.name] = device
-        # self.add_group('Home')
         if isinstance(device, OutletDevice):
             self.devices.append(device)
-        # else:
-            # self.devices[device.name.lower()] = OutletDevice(device)
-
-
-        # if hasattr(device, 'group'):
-        #     self.add_group(device.group)
 
     def list_devices(self):
         # print self.devices.toDict()
-        return unmunchify(self.devices)
+        return str(Munch(self.devices).toDict())
 
     def get_device(self, name):
         return self.devices[name]
 
-    # def get_group_by_name(self, name):
-    #     if self.name == name:
-    #         return self
-    #     elif name.lower() in self.keys():
+class TuyaDevice(Device):
+    """docstring for TuyaDevice"""
+    # def __init__(self, dev_id, address, local_key, dev_type):
+    #     super(TuyaDevice, self).__init__(dev_id, address, local_key, dev_type)
+    #     self.arg = arg
 
-    #         return self.__getattribute__('name')
 
-    # def add_group(self, group):
-        # if 'home' in group.lower():
-        #     self.devices[]
-        # self.devices = self.get_group_by_name(group)
+    def turn_on(self, switch=1):
+        """Turn the device on"""
+        data = self.set_status(True, switch)
+        return self.status()
 
+
+    def turn_off(self, switch=1):
+        """Turn the device off"""
+        data = self.set_status(False, switch)
+        return self.status()
+
+    def _parse_status_result(self, data):
+        # log.debug('parsing status data=%r', data)
+        log.debug('parsing status data: {0}'.format(data))
+        for k, v in enumerate(data):
+            if v == b'{':
+                log.debug('found it: {0}: {1}'.format(k, v))
+        jsondata = simplejson.loads(data[20:-8])
+
+        # log.debug('data decode: {0}'.format(data.decode()))
+        result = data[20:-8]  # hard coded offsets
+        #result = data[data.find('{'):data.rfind('}')+1]  # naive marker search, hope neither { nor } occur in header/footer
+        #print('result %r' % result)
+        if result.startswith(b'{'):
+            # this is the regular expected code path
+            if not isinstance(result, str):
+                result = result.decode()
+            result = simplejson.loads(result)
+        elif result.startswith(PROTOCOL_VERSION_BYTES):
+            # got an encrypted payload, happens occasionally
+            # expect resulting json to look similar to:: {"devId":"ID","dps":{"1":true,"2":0},"t":EPOCH_SECS,"s":3_DIGIT_NUM}
+            # NOTE dps.2 may or may not be present
+            result = result[len(PROTOCOL_VERSION_BYTES):]  # remove version header
+            result = result[16:]  # remove (what I'm guessing, but not confirmed is) 16-bytes of MD5 hexdigest of payload
+            cipher = AESCipher(self.local_key)
+            result = cipher.decrypt(result)
+            log.info('decrypted result=%r', result)
+            if not isinstance(result, str):
+                result = result.decode()
+            result = simplejson.loads(result)
+        else:
+            log.error('Unexpected status() payload=%r', result)
+
+        return result
+
+    def status(self):
+        log.debug('status() entry')
+        # open device, send request, then close connection
+        payload = self.generate_payload('status')
+
+        data = self._send_receive(payload)
+        return self._parse_status_result(data)

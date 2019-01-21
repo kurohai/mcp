@@ -46,7 +46,7 @@
         "dev_id": "012007585ccf7f6bff91",
         "mac": "5c:cf:7f:6b:ff:91",
         "name": "smart-outlet-05",
-        "address": "10.0.0.63"
+        "address": "10.0.0.49"
     },
     {
         "local_key": "aefaaa681e0c6a03",
@@ -70,10 +70,31 @@
         "address": "10.0.0.50"
     },
     {
+        "local_key": "",
+        "dev_id": "012007585CCF7F6B345E",
+        "mac": "5C:CF:7F:6B:34:5E",
+        "name": "smart-outlet-02",
+        "address": "10.0.0.62"
+    },
+    {
+        "local_key": "c632aeb53221c1b6",
+        "dev_id": "012007585ccf7f6b2ca7",
+        "mac": "5c:cf:7f:6b:2c:a7",
+        "name": "smart-outlet-04",
+        "address": "10.0.0.66"
+    },
+    {
         "local_key": "245ff3bcc2ba1c40",
         "dev_id": "012007585ccf7f6bfc67",
         "mac": "5c:cf:7f:6b:fc:67",
-        "name": "monitor-01",
+        "name": "smart-outlet-06",
         "address": "10.0.0.59"
+    },
+    {
+        "local_key": "7dd850812ca12ba9",
+        "dev_id": "012007585ccf7f6b345e",
+        "mac": "5c:cf:7f:6b:34:5e",
+        "name": "smart-outlet-02",
+        "address": "10.0.0.62"
     }
 ]

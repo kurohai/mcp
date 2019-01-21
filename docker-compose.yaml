@@ -1,10 +1,16 @@
 version: '3.3'
 services:
-  web:
+  mcp-api:
     restart: unless-stopped
     build: .
+    container_name: mcp-api
     volumes:
-      - ".:/data"
+#      - "./:/app:rw"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+      - type: bind
+        source: ./
+        target: /app
     environment:
       VIRTUAL_HOST: "mcp.kurohai.com"
       VIRTUAL_PORT: "8087"
@@ -13,15 +19,17 @@ services:
       HSTS: "off"
       LETSENCRYPT_HOST: "mcp.kurohai.com"
       LETSENCRYPT_EMAIL: "kurohai@gmail.com"
-      FLASK_APP: "mcp/main.py"
+      FLASK_HOST: 0.0.0.0
+      FLASK_PORT: 8087
       FLASK_DEBUG: 1
-      FLASK_CMD: "flask run --host=0.0.0.0 --port=8087"
+      FLASK_APP: mcp.wsgi:app
+      FLASK_ENV: development
 
     ports:
       - published: 8087
         target: 8087
 
-# networks:
-#   default:
-#     external:
-#       name: webproxy
+networks:
+  default:
+    external:
+      name: mcp-net

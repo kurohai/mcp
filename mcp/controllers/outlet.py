@@ -6,6 +6,8 @@ import nmap
 import os
 import sys
 
+import simplejson
+
 from cachy import CacheManager
 from flask import Blueprint
 from flask import Flask
@@ -15,19 +17,25 @@ from flask_restplus import Resource
 from flask_restplus import fields
 from flask_restplus.reqparse import RequestParser
 from flask_restplus.swagger import Swagger
+from flask_sqlalchemy import SQLAlchemy
 from munch import Munch
 from munch import munchify
 from munch import unmunchify
 from pprint import pprint
-import simplejson
-from flask_sqlalchemy import SQLAlchemy
-from mcp import app, db
+from sqlalchemy.orm import Query
+from sqlalchemy.orm import Session
+from sqlalchemy.orm import create_session
+from sqlite3 import IntegrityError
 # from mcp.parser import outletparser
 from mcp.logutil import get_logger
 
+from mcp.models.outlet import TuyaDevice
 from mcp.models.outlet import OutletDevice
 from mcp.models.outlet import OutletGroup
 
+
+from mcp import app
+from mcp import db
 from mcp.models.base import Base
 from mcp.models.user import User
 
@@ -65,6 +73,7 @@ cache = CacheManager(cachy_conf)
 #     'users':        'mysqldb://localhost/users',
 #     'appmeta':      'sqlite:////path/to/appmeta.db'
 # }
+
 
 def prep_device_list(conf_file_path):
     # global device_list
@@ -144,13 +153,16 @@ ns = api.namespace('outlet', description='Smart Life Outlets')
 swag = Swagger(api)
 
 
+# swag.register_model(OutletDevice)
+# swag.register_model(OutletGroup)
+
+
 global home_group
 # home_group = Munch()
 home_group = OutletGroup('Home')
 # home_group.Home = OutletGroup('Home')
 # outlet_list = OutletGroup('Office')
 # home_group[outlet_list.name] = outlet_list
-
 
 
 def add_to_group(device, group='Home'):
@@ -160,7 +172,6 @@ def add_to_group(device, group='Home'):
     # elif not group in home_group.keys():
     #     home_group[group] = OutletGroup(group)
     #     home_group[group].add_device(device)
-
 
 
 # monitor_01 = OutletDevice(
@@ -239,7 +250,8 @@ class OutletEndpoint(Resource):
     def get(self, outlet_name):
         # global home_group
         # return home_group.get_device(outlet_name)
-        o = db.session.query(OutletDevice).filter(OutletDevice.name == outlet_name.lower()).first()
+        o = db.session.query(OutletDevice).filter(
+            OutletDevice.name == outlet_name.lower()).first()
 
         log.info(o.to_json())
         if o:
@@ -261,105 +273,169 @@ class OutletEndpoint(Resource):
     #     return unmunchify(device)
 
 
+# @api.doc(responses={404: 'Outlet not found'}, params={'outlet_name': 'The outlet name', 'action': 'on or off'})
+# @ns.route('/<string:outlet_name>/status/')
+
+
 @api.doc(responses={404: 'Outlet not found'}, params={'outlet_name': 'The outlet name', 'action': 'on or off'})
+@ns.route('/<string:outlet_name>/<string:action>/')
+@ns.route('/<string:outlet_name>/<string:action>/<int:switch>/')
 @ns.route('/<string:outlet_name>/control/<string:action>/')
 @ns.route('/<string:outlet_name>/control/<string:action>/<int:switch>/')
 class OutletControl(Resource):
 
     @api.doc(description='Control outlets')
     def get(self, outlet_name, action, switch=1):
-        from pytuya import Device as TuyaDevice
-
-        o = db.session.query(OutletDevice).filter(OutletDevice.name == outlet_name.lower()).first()
-        log.info(o.to_dict())
-        # device = o.connect_device()
-        device = TuyaDevice(dev_id=o.dev_id, address=o.address, local_key=o.local_key, dev_type=o.dev_type)
+        outlet_name = outlet_name.lower()
+        o = OutletDevice.query.filter(
+            OutletDevice.name == outlet_name
+        ).first()
+        if o is None:
+            return {
+                "message": "Device not found",
+                "name": outlet_name,
+            }, 500
+        log.debug(o.to_dict())
+        device = o.connect_device()
         if action == 'on':
-            device.turn_on(switch=switch)
+            status = device.turn_on(switch=switch)
             # device.set_status('on', switch=switch)
         elif action == 'off':
             # device.set_status('off', switch=switch)
-            device.turn_off(switch=switch)
+            status = device.turn_off(switch=switch)
+        elif action == 'status':
+            status = device.status()
 
+        if isinstance(status, str):
+
+            status = Munch(simplejson.loads(status))
+            log.debug('string to json: {0}}'.format(status))
+        elif isinstance(status, dict):
+            status = Munch(status)
+
+        log.debug('status return type: {0}'.format(type(status)))
+        log.debug('status: {0}'.format(status))
+        # status = Munch(device.status())
+        if status.dps['1'] is True:
+            o.status = 1
+        elif status.dps['1'] is False:
+            o.status = 0
+        if o.dev_type_id == 1200758:
+
+            o.timer = status.dps.get('2', 0)
+
+            o.current = status.dps.get('4', 0)
+            o.power = status.dps.get('5', 0)
+            o.voltage = status.dps.get('6', 0)
+
+        db.session.add(o)
+        db.session.commit()
         # device.set_status(action)
-        return device.status()
+        # return simplejson.dumps(o.serialize().toDict())
+        return o.serialize().toDict()
 
+def setup_user():
+    # user = User(username='Kuro', email='kurohat@gmail.com')
+    euser = db.session.query(User).get(1)
+    if euser:
+        db.session.delete(euser)
+        db.session.commit()
+    user = User()
+    # user.id = 1
+    user.username = 'kurohai'
+    user.email = 'kurohai@gmail.com'
 
-
-db.init_app(app)
-# db.drop_all()
-# db.create_all(bind='auth')
-# db.create_all(bind='appdata')
-db.create_all()
-
-
-# user = User(username='Kuro', email='kurohat@gmail.com')
-
-euser = db.session.query(User).get(1)
-if euser:
-    db.session.delete(euser)
+    db.session.add(user)
     db.session.commit()
-user = User()
-# user.id = 1
-user.username = 'kurohai'
-user.email = 'kurohai@gmail.com'
+    pprint([u.username for u in db.session.query(User).all()])
 
-db.session.add(user)
-db.session.commit()
-pprint([u.username for u in db.session.query(User).all()])
+    pprint(db.session.query(User).get(1))
+    # pprint(User.query({'id': 1}))
 
-pprint(db.session.query(User).get(1))
-# pprint(User.query({'id': 1}))
 
-hg = db.session.query(OutletGroup).filter(OutletGroup.name == 'Home').first()
-if not hg:
+def database_setup(db, app):
+    db.init_app(app)
+    # db.drop_all()
+    # db.create_all(bind='auth')
+    # db.create_all(bind='appdata')
+    db.create_all()
+    return db, app
 
-    db.session.add(home_group)
-    db.session.commit()
-scan_results = os.path.join(data_path, 'scan-results.json')
 
-with open(scan_results, 'r') as f:
-    devices = munchify(simplejson.load(f))
+def setup_home_group():
+    # hg = db.session.query(OutletGroup).filter(OutletGroup.name == 'Home').first()
+    hg = OutletGroup.query.filter(
+        OutletGroup.name == 'Home'
+    ).first()
 
-for d in devices:
-    log.info('adding device: {0}'.format(d))
-    hg = db.session.query(OutletGroup).filter(OutletGroup.name == 'Home').first()
-    if d:
+    if not hg:
+        hg = home_group
+        db.session.add(home_group)
+        db.session.commit()
 
-        log.info('device matched: {0}'.format(d))
-        outlet = OutletDevice(
-            d.dev_id,
-            d.address,
-            d.local_key,
-            name=d.name,
 
-        )
-        # add_to_group(outlet)
+def setup_device_data():
 
-        if not db.session.query(OutletDevice).filter(OutletDevice.address == d.address).first():
-            hg.add_device(outlet)
-            # db.session.update(hg)
-            db.session.add(outlet)
-            db.session.commit()
+    scan_results = os.path.join(data_path, 'scan-results.json')
+
+    with open(scan_results, 'r') as f:
+        devices = munchify(simplejson.load(f))
+
+    for d in devices:
+        for k, v in d.items():
+            d[str(k).lower().strip()] = str(v).lower().strip()
+            print('value of d: {0}'.format(v))
+
+        # log.debug('adding device: {0}'.format(str(d.toDict())))
+        # hg = db.session.query(OutletGroup).filter(
+        #     OutletGroup.name == 'Home').first()
+        # hg = OutletGroup.query.filter(
+        #     OutletGroup.name == 'Home').first()
+        if not d:
+            pprint(d)
+            pprint(type(d))
+        else:
+
+            log.info('device matched: {0}'.format(d.name))
+            # add_to_group(outlet)
+            # dev = OutletDevice.query.filter(
+            #     OutletDevice.address == d.address).first()
+            dev = OutletDevice.query.filter(
+                OutletDevice.dev_id == d.dev_id
+            ).first()
+
+            if dev is not None:
+                log.debug(dev.to_dict())
+                log.info('device {0} found!'.format(d.name))
+                if not dev.local_key:
+                    dev.local_key = d.local_key
+                    db.session.merge(dev)
+                    db.session.commit()
+                # log.debug(dev.to_dict())
+            else:
+                log.debug(d.toDict())
+                log.info('device {0} not found'.format(d.name))
+            # if not db.session.query(OutletDevice).filter(OutletDevice.address == d.address).first():
+                outlet = OutletDevice(
+                    d.dev_id,
+                    d.address,
+                    d.local_key,
+                    name=d.name,
+                )
+                outlet.outletgroup_id = 1
+
+                # hg.add_device(outlet)
+                db.session.add(outlet)
+                try:
+                    db.session.commit()
+                # except IntegrityError as e:
+                    # log.error(e)
+                except Exception as e:
+                    pass
+                    log.error(e)
+                # finally:
+                #     db.session.rollback()
+                #     db.session.flush()
+
 
 app.register_blueprint(api_blueprint)
-
-if __name__ == '__main__':
-    log.info(api)
-
-    pprint(api.__dict__)
-    # app = Flask(__name__)
-    db.init_app(app)
-
-    db.create_all()
-
-    user = User()
-    user.username = 'Kuro'
-    user.email = 'kurohai@gmail.com'
-    user.add(user)
-
-    app.run(
-        debug=True,
-        port=8080,
-        host='0.0.0.0'
-    )

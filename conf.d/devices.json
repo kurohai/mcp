@@ -1,68 +1,83 @@
 {
     "bedroom-lamp": {
         "address": "",
+        "dev_id": "012008856001946d5026",
         "local_key": "bd10883a690f07ce",
-        "name": "bedroom-lamp",
-        "dev_id": "012008856001946d5026"
+        "name": "bedroom-lamp"
     },
     "dblr-box": {
         "address": "",
+        "dev_id": "042004835ccf7f7cf66f",
         "local_key": "7d3e9c117fcf38c3",
-        "name": "dblr-box",
-        "dev_id": "042004835ccf7f7cf66f"
+        "name": "dblr-box"
     },
     "dblr-screen": {
         "address": "",
+        "dev_id": "0120088568c63a97c7c4",
         "local_key": "3ab4e7ca2821dfcd",
-        "name": "dblr-screen",
-        "dev_id": "0120088568c63a97c7c4"
+        "name": "dblr-screen"
     },
     "main-strip-01": {
         "address": "",
+        "dev_id": "01200948ecfabc880a12",
         "local_key": "12f1a40bd54301ab",
-        "name": "main-strip-01",
-        "dev_id": "01200948ecfabc880a12"
+        "name": "main-strip-01"
     },
     "media-controller": {
         "address": "",
+        "dev_id": "0120088568c63a97c772",
         "local_key": "8beff89fd201ec89",
-        "name": "media-controller",
-        "dev_id": "0120088568c63a97c772"
-    },
-    "monitor-01": {
-        "address": "",
-        "local_key": "245ff3bcc2ba1c40",
-        "name": "monitor-01",
-        "dev_id": "012007585ccf7f6bfc67"
+        "name": "media-controller"
     },
     "office-desk-light": {
         "address": "",
+        "dev_id": "01200885dc4f220f3beb",
         "local_key": "aefaaa681e0c6a03",
-        "name": "office-desk-light",
-        "dev_id": "01200885dc4f220f3beb"
+        "name": "office-desk-light"
     },
     "office-lamp": {
         "address": "",
+        "dev_id": "042004836001947e6032",
         "local_key": "c667624bed01f961",
-        "name": "office-lamp",
-        "dev_id": "042004836001947e6032"
+        "name": "office-lamp"
     },
     "smart-outlet-01": {
         "address": "",
+        "dev_id": "012007585ccf7f6bfb8a",
         "local_key": "ddb5171e3792905b",
-        "name": "smart-outlet-01",
-        "dev_id": "012007585ccf7f6bfb8a"
+        "name": "smart-outlet-01"
+    },
+    "smart-outlet-02": {
+        "address": "",
+        "dev_id": "012007585ccf7f6b345e",
+        "local_key": "7dd850812ca12ba9",
+        "name": "smart-outlet-02"
     },
     "smart-outlet-03": {
         "address": "",
+        "dev_id": "012007585ccf7f6bfd10",
         "local_key": "e930de2845868e1d",
-        "name": "smart-outlet-03",
-        "dev_id": "012007585ccf7f6bfd10"
+        "name": "smart-outlet-03"
+    },
+    "smart-outlet-04": {
+        "address": "",
+        "dev_id": "012007585ccf7f6b2ca7",
+        "local_key": "c632aeb53221c1b6",
+        "name": "smart-outlet-04"
     },
     "smart-outlet-05": {
         "address": "",
+        "dev_id": "012007585ccf7f6bff91",
         "local_key": "2bacf775b76cf545",
-        "name": "smart-outlet-05",
-        "dev_id": "012007585ccf7f6bff91"
+        "name": "smart-outlet-05"
+    },
+    "smart-outlet-06": {
+        "address": "",
+        "dev_id": "012007585ccf7f6bfc67",
+        "local_key": "245ff3bcc2ba1c40",
+        "name": "smart-outlet-06",
+        "names_alt": [
+            "monitor-01"
+        ]
     }
 }

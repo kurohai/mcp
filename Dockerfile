@@ -1,18 +1,16 @@
 FROM ubuntu:18.04
-# FROM python:2.7-alpine
+
 
 RUN apt-get update; apt-get install -y python-pyaes python2.7 python-pip
 
 RUN mkdir /app
 WORKDIR /app
+
 RUN pip install virtualenv
 RUN virtualenv venv
-RUN ls -halF ./venv/bin/
-RUN . /app/venv/bin/activate
+RUN . venv/bin/activate
 
-COPY requirements.txt /app/requirements.txt
-
-# RUN python -m venv venv
+COPY ./requirements-dev.txt requirements.txt
 
 RUN venv/bin/pip install -U pip
 
@@ -22,17 +20,12 @@ RUN venv/bin/pip install -r requirements.txt
 
 RUN venv/bin/pip install gunicorn
 
-COPY ./ /app/
+COPY ./start.sh /app/start.sh
 
+RUN chmod a+x start.sh
 
-
-RUN chmod +x start.sh
-# RUN chmod +x entrypoint.sh
-
-ENV FLASK_APP mcp/tuya_controller.py
-
-# RUN chown -R microblog:microblog ./
-# USER microblog
+RUN find ./ -type f -maxdepth 3 -exec chmod a+rx {} \;
+RUN find ./ -type d -maxdepth 3 -exec chmod a+rxs {} \;
 
 EXPOSE 8087
 ENTRYPOINT ["./start.sh"]
