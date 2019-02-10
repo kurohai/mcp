@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 
-
 import inspect
 import os
 import sys
@@ -21,9 +20,9 @@ from mcp.logutil import get_logger
 log = get_logger(__name__)
 
 
-
 def initdb():
-    log.debug('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(i=inspect.currentframe(),p=os.path.realpath(__file__),n=__name__))
+    log.debug('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(
+        i=inspect.currentframe(), p=os.path.realpath(__file__), n=__name__))
 
     sesh = Session(bind=Base)
     Base.metadata.create_all(bind=sesh.get_bind())
@@ -32,8 +31,32 @@ def initdb():
     log.info('tables created')
 
 
+def setup_home_group():
+    log.debug('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(
+        i=inspect.currentframe(), p=os.path.realpath(__file__), n=__name__))
+    from mcp.models import OutletGroup
+    # hg = db.session.query(OutletGroup)\
+    #     .filter(OutletGroup.name == 'Home')\
+    #     .first()
+    hg = OutletGroup.query \
+        .filter(OutletGroup.name == 'Home') \
+        .first()
+
+    if hg is None:
+        hg = OutletGroup(name='Home')
+        db.session.add(hg)
+        db.session.commit()
+
+
+def db_base_data_create():
+    log.debug('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(
+        i=inspect.currentframe(), p=os.path.realpath(__file__), n=__name__))
+    setup_home_group()
+
+
 def deldb():
-    log.debug('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(i=inspect.currentframe(),p=os.path.realpath(__file__),n=__name__))
+    log.debug('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(
+        i=inspect.currentframe(), p=os.path.realpath(__file__), n=__name__))
     try:
 
         sesh = Session(bind=Base)
@@ -46,7 +69,6 @@ def deldb():
         log.error(e)
 
 
-
 if __name__ == '__main__':
-    deldb()
+    # deldb()
     initdb()

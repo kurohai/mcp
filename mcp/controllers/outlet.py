@@ -37,7 +37,7 @@ from mcp.models.outlet import TuyaDevice
 
 print('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(i=inspect.currentframe(),p=os.path.realpath(__file__),n=__name__))
 
-from mcp import app
+# from mcp.controllers import app
 from mcp import db
 from mcp.models import Base
 from mcp.models.user import User
@@ -121,20 +121,6 @@ def get_device(key):
         return device
 
 
-# sys.exit(0)
-
-
-# api_blueprint = Blueprint(
-#     'api',
-#     __name__,
-#     url_prefix='/api/v1'
-# )
-# api = Api(
-#     api_blueprint,
-#     version='1.0',
-#     title='Outlet API',
-#     description='An outlet control API',
-# )
 ns = api.namespace('outlet', description='Smart Life Outlets')
 
 
@@ -341,13 +327,13 @@ def setup_user():
     # pprint(User.query({'id': 1}))
 
 
-def database_setup(db, app):
-    db.init_app(app)
-    # db.drop_all()
-    # db.create_all(bind='auth')
-    # db.create_all(bind='appdata')
-    db.create_all()
-    return db, app
+# def database_setup(db, app):
+#     db.init_app(app)
+#     # db.drop_all()
+#     # db.create_all(bind='auth')
+#     # db.create_all(bind='appdata')
+#     db.create_all()
+#     return db, app
 
 
 def setup_home_group():

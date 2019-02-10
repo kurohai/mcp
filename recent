@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# find $1 -type f -exec stat --format '%Y :%y %n' "{}" \; | sort -nr | cut -d: -f2- | head
+line_count=$2
+find $1 -type f -print0 | xargs -0 stat --format '%Y :%y %n' | sort -n | cut -d: -f2- | tail -n $line_count
