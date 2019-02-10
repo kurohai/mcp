@@ -27,5 +27,5 @@ RUN chmod a+x start.sh
 RUN find ./ -type f -maxdepth 3 -exec chmod a+rx {} \;
 RUN find ./ -type d -maxdepth 3 -exec chmod a+rxs {} \;
 
-EXPOSE 8087
+# EXPOSE 9002
 ENTRYPOINT ["./start.sh"]

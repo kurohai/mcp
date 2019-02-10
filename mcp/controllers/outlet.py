@@ -5,6 +5,8 @@ import logging
 import nmap
 import os
 import sys
+import inspect
+print('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(i=inspect.currentframe(),p=os.path.realpath(__file__),n=__name__))
 
 import simplejson
 
@@ -29,16 +31,19 @@ from sqlite3 import IntegrityError
 # from mcp.parser import outletparser
 from mcp.logutil import get_logger
 
-from mcp.models.outlet import TuyaDevice
 from mcp.models.outlet import OutletDevice
 from mcp.models.outlet import OutletGroup
+from mcp.models.outlet import TuyaDevice
 
+print('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(i=inspect.currentframe(),p=os.path.realpath(__file__),n=__name__))
 
 from mcp import app
 from mcp import db
-from mcp.models.base import Base
+from mcp.models import Base
 from mcp.models.user import User
 
+from mcp.controllers import api
+from mcp.controllers import api_blueprint
 
 logging.basicConfig(level=logging.DEBUG)
 log = get_logger(__name__)
@@ -85,23 +90,6 @@ def prep_device_list(conf_file_path):
     return device_list
 
 
-dnames = [
-    'smart-outlet-01',
-    'smart-outlet-02',
-    'smart-outlet-03',
-    'smart-outlet-04',
-    'smart-outlet-05',
-    'smart-outlet-06',
-    'bedroom-lamp',
-    'media-controller',
-    'main-strip-01',
-    'dblr-box',
-    'dblr-screen',
-    'office-desk-light',
-    'office-lamp'
-]
-
-
 def muncherator(obj):
     return simplejson.dumps(
         unmunchify(obj),
@@ -136,21 +124,21 @@ def get_device(key):
 # sys.exit(0)
 
 
-api_blueprint = Blueprint(
-    'api',
-    __name__,
-    url_prefix='/api/v1'
-)
-api = Api(
-    api_blueprint,
-    version='1.0',
-    title='Outlet API',
-    description='An outlet control API',
-)
+# api_blueprint = Blueprint(
+#     'api',
+#     __name__,
+#     url_prefix='/api/v1'
+# )
+# api = Api(
+#     api_blueprint,
+#     version='1.0',
+#     title='Outlet API',
+#     description='An outlet control API',
+# )
 ns = api.namespace('outlet', description='Smart Life Outlets')
 
 
-swag = Swagger(api)
+# swag = Swagger(api)
 
 
 # swag.register_model(OutletDevice)
@@ -438,4 +426,4 @@ def setup_device_data():
                 #     db.session.flush()
 
 
-app.register_blueprint(api_blueprint)
+# app.register_blueprint(api_blueprint)

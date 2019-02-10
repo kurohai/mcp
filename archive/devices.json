@@ -29,6 +29,12 @@
         "local_key": "8beff89fd201ec89",
         "name": "media-controller"
     },
+    "monitor-01": {
+        "address": "",
+        "dev_id": "012007585ccf7f6bfc67",
+        "local_key": "245ff3bcc2ba1c40",
+        "name": "monitor-01"
+    },
     "office-desk-light": {
         "address": "",
         "dev_id": "01200885dc4f220f3beb",
@@ -59,25 +65,10 @@
         "local_key": "e930de2845868e1d",
         "name": "smart-outlet-03"
     },
-    "smart-outlet-04": {
-        "address": "",
-        "dev_id": "012007585ccf7f6b2ca7",
-        "local_key": "c632aeb53221c1b6",
-        "name": "smart-outlet-04"
-    },
     "smart-outlet-05": {
         "address": "",
         "dev_id": "012007585ccf7f6bff91",
         "local_key": "2bacf775b76cf545",
         "name": "smart-outlet-05"
-    },
-    "smart-outlet-06": {
-        "address": "",
-        "dev_id": "012007585ccf7f6bfc67",
-        "local_key": "245ff3bcc2ba1c40",
-        "name": "smart-outlet-06",
-        "names_alt": [
-            "monitor-01"
-        ]
     }
 }

@@ -1,0 +1,156 @@
+[
+    {
+        "device": {
+            "cast_type": "cast",
+            "model_name": "Chromecast Ultra",
+            "friendly_name": "Main TV",
+            "uuid": "e7a91137\\-93b2\\-b3ee\\-a269\\-928419d2d235",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.12",
+        "port": 8009
+    },
+    {
+        "device": {
+            "cast_type": "cast",
+            "model_name": "Chromecast",
+            "friendly_name": "Office TV",
+            "uuid": "5be5043b\\-a50c\\-da4e\\-ded6\\-5396c7b72bd0",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.14",
+        "port": 8009
+    },
+    {
+        "device": {
+            "cast_type": "cast",
+            "model_name": "Google Home Mini",
+            "friendly_name": "Bedroom Speaker",
+            "uuid": "386cebfe\\-c712\\-792a\\-8712\\-765a1e382121",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.15",
+        "port": 8009
+    },
+    {
+        "device": {
+            "cast_type": "group",
+            "model_name": "Google Cast Group",
+            "friendly_name": "Office Group",
+            "uuid": "6d596165\\-c50f\\-46eb\\-a902\\-02c44b9ad434",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.53",
+        "port": 42435
+    },
+    {
+        "device": {
+            "cast_type": "audio",
+            "model_name": "Chromecast Audio",
+            "friendly_name": "Office Audio",
+            "uuid": "ec3316e7\\-26cc\\-0f66\\-9981\\-e4ee467f213e",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.53",
+        "port": 8009
+    },
+    {
+        "device": {
+            "cast_type": "cast",
+            "model_name": "Chromecast",
+            "friendly_name": "Bedroom TV",
+            "uuid": "3c9c5159\\-9ab1\\-473a\\-52c9\\-346a20d21917",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.54",
+        "port": 8009
+    },
+    {
+        "device": {
+            "cast_type": "group",
+            "model_name": "Google Cast Group",
+            "friendly_name": "Living Room Group",
+            "uuid": "df99063e\\-e447\\-4d6d\\-8689\\-6f9e87a021de",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.61",
+        "port": 42055
+    },
+    {
+        "device": {
+            "cast_type": "group",
+            "model_name": "Google Cast Group",
+            "friendly_name": "Everywhere",
+            "uuid": "db168f82\\-f398\\-4099\\-9be3\\-adbf090e9753",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.61",
+        "port": 42162
+    },
+    {
+        "device": {
+            "cast_type": "audio",
+            "model_name": "Chromecast Audio",
+            "friendly_name": "Main Audio",
+            "uuid": "73fe48e2\\-9f2f\\-5fe0\\-1e1a\\-afc5a200412e",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.61",
+        "port": 8009
+    },
+    {
+        "device": {
+            "cast_type": "cast",
+            "model_name": "Google Home Hub",
+            "friendly_name": "Kitchen display",
+            "uuid": "5c73e0db\\-540c\\-a021\\-85b8\\-159fed2e67b2",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.73",
+        "port": 8009
+    },
+    {
+        "device": {
+            "cast_type": "cast",
+            "model_name": "Google Home Hub",
+            "friendly_name": "Office display",
+            "uuid": "793bad02\\-4ead\\-87b2\\-6804\\-a8fc6e394ea0",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.77",
+        "port": 8009
+    },
+    {
+        "device": {
+            "cast_type": "cast",
+            "model_name": "Chromecast",
+            "friendly_name": "Desk TV",
+            "uuid": "152ce471\\-3fc5\\-c03f\\-6412\\-15e9906c3234",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.78",
+        "port": 8009
+    },
+    {
+        "device": {
+            "cast_type": "cast",
+            "model_name": "Google Home Hub",
+            "friendly_name": "Bathroom display",
+            "uuid": "1aac3b50\\-63f7\\-877d\\-6dba\\-1cbe4e357ab0",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.79",
+        "port": 8009
+    },
+    {
+        "device": {
+            "cast_type": "cast",
+            "model_name": "Google Home Hub",
+            "friendly_name": "Living Room display",
+            "uuid": "4643265a\\-7482\\-962d\\-9855\\-5a3f3d07ee74",
+            "manufacturer": "Google Inc."
+        },
+        "ip_address": "10.0.0.80",
+        "port": 8009
+    }
+]

@@ -6,6 +6,8 @@
 # from flask_restplus import Resource
 # from sqlalchemy.ext.declarative import declared_attr
 import simplejson
+import os, inspect
+print('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(i=inspect.currentframe(),p=os.path.realpath(__file__),n=__name__))
 
 from flask_restplus.model import Model
 from munch import Munch
@@ -20,19 +22,25 @@ from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
+from sqlalchemy.orm import Session
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.orm import validates
+# from sqlalchemy.orm import synonym_for
+import inspect
 from mcp.models import Base
 from mcp.logutil import get_logger
 
 
-log = get_logger(__name__)
 
+log = get_logger(__name__)
+log.info('controller.outlet')
+import os, inspect
+print('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(i=inspect.currentframe(),p=os.path.realpath(__file__),n=__name__))
 
 class OutletDevice(Base):
     """docstring for OutletDevice"""
 
-    # __bind_key__ = 'appdata'
+    __bind_key__ = 'appdata'
 
     name = Column(String(80), unique=True, nullable=False)
     address = Column(String(80), unique=False, nullable=True)
@@ -75,6 +83,12 @@ class OutletDevice(Base):
 
     def _mac_addr(self):
         return self.dev_id[8:].lower()
+
+    @validates('dev_id')
+    def validate_dev_id(self, dev_id):
+        assert len(self.dev_id) == 20
+        return dev_id
+
 
     def serialize(self):
         d = Munch()

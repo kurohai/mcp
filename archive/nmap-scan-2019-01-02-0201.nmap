@@ -1,0 +1,104 @@
+
+Starting Nmap 7.01 ( https://nmap.org ) at 2019-01-02 02:03 CST
+Initiating ARP Ping Scan at 02:03
+Scanning 71 hosts [1 port/host]
+Completed ARP Ping Scan at 02:03, 5.25s elapsed (71 total hosts)
+Initiating Parallel DNS resolution of 71 hosts. at 02:03
+Completed Parallel DNS resolution of 71 hosts. at 02:03, 0.00s elapsed
+Initiating SYN Stealth Scan at 02:03
+Scanning 36 hosts [1 port/host]
+Discovered open port 6668/tcp on 10.0.0.50
+Discovered open port 6668/tcp on 10.0.0.41
+Discovered open port 6668/tcp on 10.0.0.33
+Discovered open port 6668/tcp on 10.0.0.48
+Discovered open port 6668/tcp on 10.0.0.43
+Discovered open port 6668/tcp on 10.0.0.66
+Discovered open port 6668/tcp on 10.0.0.63
+Discovered open port 6668/tcp on 10.0.0.59
+Discovered open port 6668/tcp on 10.0.0.62
+Discovered open port 6668/tcp on 10.0.0.55
+Discovered open port 6668/tcp on 10.0.0.52
+Discovered open port 6668/tcp on 10.0.0.32
+Discovered open port 6668/tcp on 10.0.0.71
+Completed SYN Stealth Scan at 02:03, 1.24s elapsed (36 total ports)
+Nmap scan report for 10.0.0.32
+Host is up (0.13s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 5C:CF:7F:7C:F6:6F (Espressif)
+
+Nmap scan report for 10.0.0.33
+Host is up (0.13s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 60:01:94:7E:60:32 (Unknown)
+
+Nmap scan report for 10.0.0.41
+Host is up (0.47s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 60:01:94:6D:50:26 (Unknown)
+
+Nmap scan report for 10.0.0.43
+Host is up (0.16s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: EC:FA:BC:88:0A:12 (Unknown)
+
+Nmap scan report for 10.0.0.48
+Host is up (0.71s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 5C:CF:7F:6B:FD:10 (Espressif)
+
+Nmap scan report for 10.0.0.50
+Host is up (0.16s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 68:C6:3A:97:C7:C4 (Unknown)
+
+Nmap scan report for 10.0.0.52
+Host is up (0.16s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 68:C6:3A:97:C7:72 (Unknown)
+
+Nmap scan report for 10.0.0.55
+Host is up (0.61s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: DC:4F:22:0F:3B:EB (Unknown)
+
+Nmap scan report for 10.0.0.59
+Host is up (0.069s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 5C:CF:7F:6B:FC:67 (Espressif)
+
+Nmap scan report for 10.0.0.62
+Host is up (0.073s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 5C:CF:7F:6B:34:5E (Espressif)
+
+Nmap scan report for 10.0.0.63
+Host is up (0.075s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 5C:CF:7F:6B:FF:91 (Espressif)
+
+Nmap scan report for 10.0.0.66
+Host is up (0.018s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 5C:CF:7F:6B:2C:A7 (Espressif)
+
+Nmap scan report for 10.0.0.71
+Host is up (0.65s latency).
+PORT     STATE SERVICE
+6668/tcp open  irc
+MAC Address: 5C:CF:7F:6B:FB:8A (Espressif)
+
+Read data files from: /usr/bin/../share/nmap
+Nmap done: 71 IP addresses (36 hosts up) scanned in 6.63 seconds
+           Raw packets sent: 168 (5.536KB) | Rcvd: 97 (4.271KB)

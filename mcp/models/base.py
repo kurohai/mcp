@@ -5,14 +5,27 @@ import simplejson
 
 from munch import Munch
 from munch import unmunchify
-from sqlalchemy import Column, Integer
+from sqlalchemy.orm import Session
+from sqlalchemy import Column
+from sqlalchemy import Float
+from sqlalchemy import ForeignKey
+from sqlalchemy import Boolean
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy.orm import relationship
+# from sqlalchemy.orm import synonym
+# from sqlalchemy.orm import synonym_for
+# from sqlalchemy.ext.declarative import synonym_for
 from sqlalchemy.ext.declarative import as_declarative
 from sqlalchemy.ext.declarative import declared_attr
-from six import with_metaclass
-
+# from six import with_metaclass
+# import random
+# import hash
 # from flask_sqlalchemy import Model
 from flask_restplus.model import Model
 # from mcp import db
+
+
 
 
 @as_declarative()
@@ -25,6 +38,33 @@ class Base(object):
     @declared_attr
     def id(self):
         return Column(Integer, primary_key=True, autoincrement=True)
+
+    def __repr__(self):
+        return '<{1} {0}>'.format(
+            str(self.to_dict()),
+            self.__class__
+        )
+
+    def serialize(self):
+        d = Munch()
+        d.id = self.id
+        return d
+
+    def to_json(self):
+        return self.serialize().toJSON()
+
+    def to_dict(self):
+        return self.serialize().toDict()
+
+
+@as_declarative()
+class TuyaBase(object):
+    """docstring for TuyaBase"""
+
+
+    @declared_attr
+    def __tablename__(cls):
+        return cls.__name__.lower()
 
     def __repr__(self):
         return '<{1} {0}>'.format(
