@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-from flask_restplus.reqparse import RequestParser
+from flask_restplus_patched.reqparse import RequestParser
 from mcp.logutil import get_logger
 from munch import Munch
 from munch import munchify

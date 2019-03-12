@@ -121,4 +121,7 @@ log/
 *.db
 *.py[codr]
 *.nmap
-*.grep
+*.gnmap
+*.pcap
+scan*.xml
+archive/

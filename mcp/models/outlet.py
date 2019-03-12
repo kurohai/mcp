@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 
 
-# from flask_restplus import Model
-# from flask_restplus import OrderedModel
-# from flask_restplus import Resource
+# from flask_restplus_patched import Model
+# from flask_restplus_patched import OrderedModel
+# from flask_restplus_patched import Resource
 # from sqlalchemy.ext.declarative import declared_attr
+import inspect
+import os
 import simplejson
+print('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(
+    i=inspect.currentframe(), p=os.path.realpath(__file__), n=__name__))
 
-from flask_restplus.model import Model
+from flask_restplus_patched.model import Model
+from flask_restplus_patched.model import ModelSchema
 from munch import Munch
 from munch import munchify
 from munch import unmunchify
@@ -20,19 +25,28 @@ from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
+from sqlalchemy.orm import Session
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm import validates
+# from sqlalchemy.orm import synonym_for
 
-from mcp.models import Base
 from mcp.logutil import get_logger
+from mcp.models import Base
 
 
 log = get_logger(__name__)
+log.info('controller.outlet')
+print('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(
+    i=inspect.currentframe(), p=os.path.realpath(__file__), n=__name__))
 
 
 class OutletDevice(Base):
     """docstring for OutletDevice"""
 
-    # __bind_key__ = 'appdata'
+    __bind_key__ = 'appdata'
+
+    # schema = Base.__schema__
+
 
     name = Column(String(80), unique=True, nullable=False)
     address = Column(String(80), unique=False, nullable=True)
@@ -76,6 +90,11 @@ class OutletDevice(Base):
     def _mac_addr(self):
         return self.dev_id[8:].lower()
 
+    @validates('dev_id')
+    def validate_dev_id(self, dev_id):
+        assert len(self.dev_id) == 20
+        return dev_id
+
     def serialize(self):
         d = Munch()
         d.name = self.name
@@ -102,6 +121,11 @@ class OutletDevice(Base):
         return TuyaDevice(self.dev_id, self.address, local_key=self.local_key, dev_type=self.dev_type)
 
 
+# class OutletDeviceSchema(ModelSchema):
+#     class Meta:
+#         model = OutletDevice
+
+
 class OutletGroup(Base):
     """docstring for OutletGroup"""
 
@@ -125,18 +149,17 @@ class OutletGroup(Base):
     def get_device(self, name):
         return self.devices[name]
 
+
 class TuyaDevice(Device):
     """docstring for TuyaDevice"""
     # def __init__(self, dev_id, address, local_key, dev_type):
     #     super(TuyaDevice, self).__init__(dev_id, address, local_key, dev_type)
     #     self.arg = arg
 
-
     def turn_on(self, switch=1):
         """Turn the device on"""
         data = self.set_status(True, switch)
         return self.status()
-
 
     def turn_off(self, switch=1):
         """Turn the device off"""
@@ -153,7 +176,7 @@ class TuyaDevice(Device):
 
         # log.debug('data decode: {0}'.format(data.decode()))
         result = data[20:-8]  # hard coded offsets
-        #result = data[data.find('{'):data.rfind('}')+1]  # naive marker search, hope neither { nor } occur in header/footer
+        # result = data[data.find('{'):data.rfind('}')+1]  # naive marker search, hope neither { nor } occur in header/footer
         #print('result %r' % result)
         if result.startswith(b'{'):
             # this is the regular expected code path
@@ -164,8 +187,10 @@ class TuyaDevice(Device):
             # got an encrypted payload, happens occasionally
             # expect resulting json to look similar to:: {"devId":"ID","dps":{"1":true,"2":0},"t":EPOCH_SECS,"s":3_DIGIT_NUM}
             # NOTE dps.2 may or may not be present
-            result = result[len(PROTOCOL_VERSION_BYTES):]  # remove version header
-            result = result[16:]  # remove (what I'm guessing, but not confirmed is) 16-bytes of MD5 hexdigest of payload
+            # remove version header
+            result = result[len(PROTOCOL_VERSION_BYTES):]
+            # remove (what I'm guessing, but not confirmed is) 16-bytes of MD5 hexdigest of payload
+            result = result[16:]
             cipher = AESCipher(self.local_key)
             result = cipher.decrypt(result)
             log.info('decrypted result=%r', result)

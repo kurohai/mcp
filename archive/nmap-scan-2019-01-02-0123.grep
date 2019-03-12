@@ -1,0 +1,29 @@
+# Nmap 7.01 scan initiated Wed Jan  2 01:26:02 2019 as: nmap -vvv -ddd -oG ../mcp/archive/nmap-scan-2019-01-02-0123.grep --open -Pn -p 6668 10.0.0.30-100
+# Ports scanned: TCP(1;6668) UDP(0;) SCTP(0;) PROTOCOLS(0;)
+Host: 10.0.0.32 ()	Status: Up
+Host: 10.0.0.32 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.33 ()	Status: Up
+Host: 10.0.0.33 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.41 ()	Status: Up
+Host: 10.0.0.41 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.43 ()	Status: Up
+Host: 10.0.0.43 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.48 ()	Status: Up
+Host: 10.0.0.48 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.50 ()	Status: Up
+Host: 10.0.0.50 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.52 ()	Status: Up
+Host: 10.0.0.52 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.55 ()	Status: Up
+Host: 10.0.0.55 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.59 ()	Status: Up
+Host: 10.0.0.59 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.62 ()	Status: Up
+Host: 10.0.0.62 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.63 ()	Status: Up
+Host: 10.0.0.63 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.66 ()	Status: Up
+Host: 10.0.0.66 ()	Ports: 6668/open/tcp//irc///
+Host: 10.0.0.71 ()	Status: Up
+Host: 10.0.0.71 ()	Ports: 6668/open/tcp//irc///
+# Nmap done at Wed Jan  2 01:26:07 2019 -- 71 IP addresses (35 hosts up) scanned in 5.27 seconds

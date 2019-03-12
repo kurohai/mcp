@@ -1,11 +1,14 @@
 version: '3.3'
 services:
   mcp-api:
+    env_file:
+      - .env
+      - mastercontrol.env
     restart: unless-stopped
     build: .
     container_name: mcp-api
+
     volumes:
-#      - "./:/app:rw"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
       - type: bind
@@ -13,21 +16,24 @@ services:
         target: /app
     environment:
       VIRTUAL_HOST: "mcp.kurohai.com"
-      VIRTUAL_PORT: "8087"
+      VIRTUAL_PORT: "9002"
       # VIRTUAL_ROOT: "/"
       HTTPS_METHOD: "redirect"
       HSTS: "off"
       LETSENCRYPT_HOST: "mcp.kurohai.com"
       LETSENCRYPT_EMAIL: "kurohai@gmail.com"
-      FLASK_HOST: 0.0.0.0
-      FLASK_PORT: 8087
-      FLASK_DEBUG: 1
-      FLASK_APP: mcp.wsgi:app
-      FLASK_ENV: development
+      # FLASK_HOST: 0.0.0.0
+      # FLASK_PORT: 9002
+      # FLASK_DEBUG: 1
+      # FLASK_ENV: development
+      # FLASK_RELOAD: "--reload"
+      # FLASK_APP: mcp.wsgi:app
+      # FLASK_APP: mcp.wsgi:hdmi
 
     ports:
-      - published: 8087
-        target: 8087
+      - published: 9002
+        target: 9002
+
 
 networks:
   default:
