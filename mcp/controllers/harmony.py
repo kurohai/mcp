@@ -4,8 +4,8 @@
 import requests
 
 from controllers import api
-from flask_restplus import Resource
-from flask_restplus.swagger import Swagger
+from flask_restplus_patched import Resource
+from flask_restplus_patched.swagger import Swagger
 from munch import Munch
 
 from mcp import app

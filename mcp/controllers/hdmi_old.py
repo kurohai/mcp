@@ -5,9 +5,9 @@ import requests
 
 import simplejson
 
-from flask_restplus import Resource
-from flask_restplus.swagger import Swagger
-from mcp import app
+from flask_restplus_patched import Resource
+from flask_restplus_patched.swagger import Swagger
+# from mcp import app
 from mcp.controllers import api
 from mcp.logutil import get_logger
 from munch import Munch

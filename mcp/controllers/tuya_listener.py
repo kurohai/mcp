@@ -66,6 +66,7 @@ def main():
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(('', port))
+    counter = int()
     while True:
         sesh = Session()
         log.info('scan again...')
@@ -117,10 +118,15 @@ def main():
             finally:
                 sesh.close()
 
-        # log.info('sleeping a few secs...')
-        # for i in xrange(5):
-        #     time.sleep(1)
-        #     log.info(i)
+        counter += 1
+        if counter == 19:
+            log.info('sleeping a few secs...')
+            for i in xrange(5):
+                time.sleep(1)
+                log.info(i)
+            counter = 0
+        elif counter > 19:
+            counter = 0
 
 if __name__ == '__main__':
     main()

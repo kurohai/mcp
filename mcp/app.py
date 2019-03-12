@@ -3,12 +3,12 @@
 
 from flask import Blueprint
 from flask import Flask
-from flask_restplus import Api
-# from flask_restplus import Model
-# from flask_restplus import OrderedModel
-from flask_restplus import Resource
-from flask_restplus import fields
-from flask_restplus.swagger import Swagger
+from flask_restplus_patched import Api
+# from flask_restplus_patched import Model
+# from flask_restplus_patched import OrderedModel
+from flask_restplus_patched import Resource
+from flask_restplus_patched import fields
+from flask_restplus_patched.swagger import Swagger
 
 
 from models import DeviceList

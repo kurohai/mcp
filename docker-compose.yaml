@@ -1,11 +1,14 @@
 version: '3.3'
 services:
   mcp-api:
+    env_file:
+      - .env
+      - mastercontrol.env
     restart: unless-stopped
     build: .
     container_name: mcp-api
+
     volumes:
-#      - "./:/app:rw"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
       - type: bind
@@ -19,70 +22,18 @@ services:
       HSTS: "off"
       LETSENCRYPT_HOST: "mcp.kurohai.com"
       LETSENCRYPT_EMAIL: "kurohai@gmail.com"
-      FLASK_HOST: 0.0.0.0
-      FLASK_PORT: 9002
-      FLASK_DEBUG: 1
-      FLASK_ENV: development
-      FLASK_APP: mcp.wsgi:app
+      # FLASK_HOST: 0.0.0.0
+      # FLASK_PORT: 9002
+      # FLASK_DEBUG: 1
+      # FLASK_ENV: development
+      # FLASK_RELOAD: "--reload"
+      # FLASK_APP: mcp.wsgi:app
       # FLASK_APP: mcp.wsgi:hdmi
 
     ports:
       - published: 9002
         target: 9002
 
-
-
-
-  # postgresql:
-  #   environment:
-  #     POSTGRES_DB: mcp-db
-  #     POSTGRES_PASSWORD: mermaidpuss
-  #     POSTGRES_USER: mcp-user
-  #   image: postgres:10.4
-  #   volumes:
-  #   - type: bind
-  #     target: /var/lib/postgresql/data
-  #     source: ${PWD}/postgres/data
-    # ports:
-    #   - published: 5432
-    #     target: 5432
-
-
-
-    # - ${PWD}/postgres/data:/var/lib/postgresql/data:rw
-
-
-
-# version: '3.6'
-
-
-  # mongodb:
-  #   image: mongo:latest
-  #   container_name: "mongodb"
-  #   restart: unless-stopped
-  #   environment:
-  #     - "/etc/localtime:/etc/localtime:ro"
-  #     - "/etc/timezone:/etc/timezone:ro"
-  #     - "MONGO_DATA_DIR=/data/db"
-  #     - "MONGO_LOG_DIR=/data/log"
-  #   volumes:
-  #     # - "./mongo-data:/data/db"
-  #     # - "./mongo-log:/data/log"
-  #     - type: bind
-  #       source: ./mongo-data
-  #       target: /data/db
-  #     - type: bind
-  #       source: ./mongo-log
-  #       target: /data/log
-  #   ports:
-  #     - "27017:27017"
-  #   command: mongod --smallfiles --logpath=/data/log
-  # mongo:
-  #   image: mongo
-  #   restart: unless-stopped
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: root
-  #     MONGO_INITDB_ROOT_PASSWORD: example
 
 networks:
   default:

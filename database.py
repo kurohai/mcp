@@ -11,10 +11,10 @@ from mcp import TuyaBase
 from mcp.logutil import get_logger
 
 # from mcp import SQLALCHEMY_BINDS
-# from mcp import engine_mcp
-# from mcp import engine_tuya
-# from mcp.utilities.sesh import db_connection
-# from mcp.utilities.sesh import db_session
+from mcp import engine_mcp
+from mcp import engine_tuya
+from mcp.utilities.sesh import db_connection
+from mcp.utilities.sesh import db_session
 
 
 log = get_logger(__name__)
@@ -25,9 +25,10 @@ def initdb():
         i=inspect.currentframe(), p=os.path.realpath(__file__), n=__name__))
 
     sesh = Session(bind=Base)
-    Base.metadata.create_all(bind=sesh.get_bind())
+    # engine_mcp
+    Base.metadata.create_all(bind=engine_mcp)
     sesh = Session(bind=TuyaBase)
-    TuyaBase.metadata.create_all(bind=sesh.get_bind())
+    TuyaBase.metadata.create_all(bind=engine_tuya)
     log.info('tables created')
 
 
@@ -60,9 +61,9 @@ def deldb():
     try:
 
         sesh = Session(bind=Base)
-        Base.metadata.drop_all(bind=sesh.get_bind())
+        Base.metadata.drop_all(bind=engine_mcp)
         sesh = Session(bind=TuyaBase)
-        TuyaBase.metadata.drop_all(bind=sesh.get_bind())
+        TuyaBase.metadata.drop_all(bind=engine_tuya)
         log.info('tables deleted')
 
     except Exception as e:
@@ -70,5 +71,7 @@ def deldb():
 
 
 if __name__ == '__main__':
-    # deldb()
+    if '-f' in sys.argv:
+        deldb()
+
     initdb()

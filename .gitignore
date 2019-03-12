@@ -120,3 +120,8 @@ sftp-*.json
 log/
 *.db
 *.py[codr]
+*.nmap
+*.gnmap
+*.pcap
+scan*.xml
+archive/

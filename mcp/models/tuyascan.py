@@ -6,7 +6,9 @@ import simplejson
 print('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(i=inspect.currentframe(),p=os.path.realpath(__file__),n=__name__))
 
 # from mcp import Base, TuyaBase
-from flask_sqlalchemy import Model
+# from flask_sqlalchemy import Model
+from flask_restplus_patched.model import Model
+
 from mcp.logutil import get_logger
 from mcp.models import TuyaBase
 print('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(i=inspect.currentframe(),p=os.path.realpath(__file__),n=__name__))
@@ -30,7 +32,7 @@ print('here inspecting:\n\t{p}\n\t{n}\n\t{i.f_lineno}'.format(i=inspect.currentf
 
 class TuyaScan(TuyaBase):
     __bind_key__ = 'tuya_device'
-
+    # __schema__ = TuyaBase.schema
 
     ip              = Column(String(80), unique=False, nullable=True)
     gwId            = Column(String(80), unique=True, nullable=False, primary_key=True)

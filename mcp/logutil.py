@@ -1,8 +1,12 @@
+#!/usr/bin/env python
+
+
 import logging
 import os
 import sys
-from mcp import app_name
+
 from logging.handlers import TimedRotatingFileHandler
+from mcp import app_name
 
 pwd = os.path.dirname(os.path.realpath(__file__))
 
