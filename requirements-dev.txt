@@ -7,7 +7,7 @@ Flask-SQLAlchemy==2.2
 Flask>=1.0,<2.0
 Jinja2==2.10
 MarkupSafe==1.1.0
-PyYAML==3.13
+PyYAML==5.4
 SQLAlchemy-Utils==0.32.12
 SQLAlchemy==1.1.5
 aniso8601==4.0.1
