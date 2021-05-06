@@ -23,7 +23,7 @@ contextlib2==0.5.5
 crayons==0.1.2
 enum34==1.1.6
 Flask-Admin==1.5.3
-Flask-Cors==3.0.2
+Flask-Cors==3.0.9
 Flask-Login==0.4.0
 flask-marshmallow==0.7.0
 Flask-Migrate==2.4.0
