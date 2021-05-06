@@ -1,6 +1,6 @@
 Alembic==0.8.10
 Click==7.0
-Flask-Cors==3.0.2
+Flask-Cors==3.0.9
 Flask-Login==0.4.0
 Flask-OAuthlib>=0.9.4
 Flask-SQLAlchemy==2.2
